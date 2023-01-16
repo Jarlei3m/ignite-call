@@ -31,3 +31,7 @@ export const Label = styled("label", {
   flexDirection: "column",
   gap: "$2",
 });
+
+export const FormError = styled(Text, {
+  color: "#f75a68",
+});
