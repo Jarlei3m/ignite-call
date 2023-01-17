@@ -19,10 +19,7 @@ const registerFormSchema = z.object({
     .transform((username) => username.toLocaleLowerCase()),
   name: z
     .string()
-    .min(3, { message: "O nome precisa ter pelo menos 3 letras" })
-    .regex(/^([a-z\\" "]+)$/i, {
-      message: "O nome pode conter apenas letras",
-    }),
+    .min(3, { message: "O nome precisa ter pelo menos 3 letras" }),
 });
 
 type RegisterFormData = z.infer<typeof registerFormSchema>;
@@ -45,6 +42,8 @@ export default function Register() {
         name: data.name,
         username: data.username,
       });
+
+      await router.push("/register/connect-calendar");
     } catch (err) {
       if (err instanceof AxiosError && err?.response?.data?.message) {
         alert(err.response.data.message);
