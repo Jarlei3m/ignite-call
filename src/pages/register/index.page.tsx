@@ -1,3 +1,4 @@
+import { api } from "@/src/lib/axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Heading, MultiStep, Text, TextInput } from "@ignite-ui/react";
 import { useRouter } from "next/router";
@@ -18,7 +19,7 @@ const registerFormSchema = z.object({
   name: z
     .string()
     .min(3, { message: "O nome precisa ter pelo menos 3 letras" })
-    .regex(/^([a-z]+)$/i, {
+    .regex(/^([a-z\\" "]+)$/i, {
       message: "O nome pode conter apenas letras",
     }),
 });
@@ -38,7 +39,14 @@ export default function Register() {
   const router = useRouter();
 
   async function handleRegister(data: RegisterFormData) {
-    console.log("data", data);
+    try {
+      await api.post("/users", {
+        name: data.name,
+        username: data.username,
+      });
+    } catch (error) {
+      console.log("error", error);
+    }
   }
 
   useEffect(() => {
