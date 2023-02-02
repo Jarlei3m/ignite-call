@@ -1,8 +1,17 @@
+import { api } from "@/src/lib/axios";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Heading, MultiStep, Text, TextArea } from "@ignite-ui/react";
+import {
+  Avatar,
+  Button,
+  Heading,
+  MultiStep,
+  Text,
+  TextArea,
+} from "@ignite-ui/react";
 import { GetServerSideProps } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { ArrowRight } from "phosphor-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -26,9 +35,15 @@ export default function UpdateProfile() {
   });
 
   const session = useSession();
-  console.log("session", session);
+  const router = useRouter();
 
-  async function handleUpdateProfile(data: UpdateProfileData) {}
+  async function handleUpdateProfile(data: UpdateProfileData) {
+    await api.put("/users/profile", {
+      bio: data.bio,
+    });
+
+    await router.push(`/schedule/${session.data?.user.username}`);
+  }
 
   return (
     <Container>
@@ -45,6 +60,10 @@ export default function UpdateProfile() {
       <ProfileBox as="form" onSubmit={handleSubmit(handleUpdateProfile)}>
         <Label>
           <Text size="sm">Foto de perfil</Text>
+          <Avatar
+            src={session.data?.user.avatar_url}
+            alt={session.data?.user.name}
+          />
         </Label>
 
         <Label>
