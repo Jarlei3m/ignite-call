@@ -24,7 +24,7 @@ export default async function handle(
   });
 
   if (!user) {
-    return res.status(400).json({ message: "User dows not exist." });
+    return res.status(400).json({ message: "User does not exist." });
   }
 
   const referenceDate = dayjs(String(date));
@@ -56,5 +56,24 @@ export default async function handle(
     return startHour + i;
   });
 
-  return res.json({ possibleTimes });
+  const blockedTimes = await prisma.scheduling.findMany({
+    select: {
+      date: true,
+    },
+    where: {
+      user_id: user.id,
+      date: {
+        gte: referenceDate.set("hour", startHour).toDate(),
+        lte: referenceDate.set("hour", endHour).toDate(),
+      },
+    },
+  });
+
+  const availableTimes = possibleTimes.filter((time) => {
+    return !blockedTimes.some(
+      (blockedTime) => blockedTime.date.getHours() === time
+    );
+  });
+
+  return res.json({ possibleTimes, availableTimes });
 }
