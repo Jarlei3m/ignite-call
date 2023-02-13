@@ -1,6 +1,6 @@
 import { Calendar } from "@/src/components/Calendar";
 import { api } from "@/src/lib/axios";
-import { useQuery } from "@tanstack/react-query/build/lib/useQuery";
+import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -49,22 +49,6 @@ export function CalendarStep() {
       enabled: !!selectedDate,
     }
   );
-
-  // useEffect(() => {
-  //   if (!selectedDate) {
-  //     return;
-  //   }
-
-  // api
-  //   .get(`/users/${username}/availability`, {
-  //     params: {
-  //       date: dayjs(selectedDate).format("YYYY-MM-DD"),
-  //     },
-  //   })
-  //     .then((response) => {
-  //       setAvailability(response.data);
-  //     });
-  // }, [selectedDate, username]);
 
   return (
     <Container isTimePickerOpen={isDateSelected}>
